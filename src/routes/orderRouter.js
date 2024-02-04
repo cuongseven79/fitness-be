@@ -10,16 +10,13 @@ const upload = multer({ storage: tempStorage });
 const handlePostOrder = async(req,res) => {
     try {
         const { displayName, date, orderId, service_type, start_time, end_time, paid_money} = req.body;
-        console.log( displayName, date, orderId, service_type, start_time, end_time, paid_money)
         await Order.doc().set({ displayName, date, orderId, service_type, start_time, end_time, paid_money });
-        console.log(Order)
         return res.status(200).json({ message: "Order sent successfully", statusCode: 200 });
     } catch (error) {
       return res.status(500).send({message: error.message})
     }
   }
   const handleGetOrder = async (req, res) => { 
-    console.log("running")
     try {
         const snapshot = await Order.get();
      
@@ -31,7 +28,6 @@ const handlePostOrder = async(req,res) => {
 
             return order;
         });
-        console.log(orders)
         return res.status(200).json({statusCode: 200, ordersData: orders });
     } catch (error) {
         console.error(error);
