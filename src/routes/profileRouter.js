@@ -94,9 +94,24 @@ const handleGetProfile = async(req,res) => {
     return res.status(500).send({message: error.message})
   }
 }
+  const handleUpdateInfoUser = async(req, res) => {
+    const { formData, id } = req.body;
+    
+    try {
+      if (!id || !formData) {
+      return;
+    }
+        await User.doc(id).update(formData);
+        return res.status(200).json({ message: "User updated successfully", formData });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "An error occurred" });
+    }
+}
 
 router.get('/', handleGetProfile);
 router.post('/', upload.single('image'), handleUpload);
+router.put('/update', handleUpdateInfoUser);
 router.delete('/delete', handleDelete);
 
 module.exports = router;

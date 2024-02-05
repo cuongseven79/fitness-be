@@ -4,7 +4,7 @@ const app = express();
 
 //test setver 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send('Connected to Server successfull !');
 });
 
 app.use(express.urlencoded({ extended: true }));
