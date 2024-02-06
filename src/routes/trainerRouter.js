@@ -5,10 +5,13 @@
 	async function handleGetAllTrainer(req, res) {
 		try {
 			const usersSnapshot = await User.get();
-			const usersData = usersSnapshot.docs.map((doc) => ({
-				id: doc.id,
-				...doc.data(),
-			}));
+			const usersData = usersSnapshot.docs.map((doc) => {
+				const { password, ...userWithoutPassword } = doc.data();
+				return {
+					id: doc.id,
+					...userWithoutPassword,
+				};
+			});
 			const allTrainers = usersData.filter((user) => user.role === "pt" && user.trainerStatus == true);
 			return res.status(200).json({statusCode: 200, trainers: allTrainers });
 		} catch (error) {
@@ -17,6 +20,5 @@
 		}
 	}
 
-	
 	router.get('/', handleGetAllTrainer);
 	module.exports = router;
