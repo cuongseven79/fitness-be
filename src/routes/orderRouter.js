@@ -1,16 +1,10 @@
-const admin = require('firebase-admin');
-const uuid = require('uuid-v4');
-const multer = require('multer');
 const express = require('express');
-const { User, Order } = require('../config/firebase-config');
+const { Order } = require('../config/firebase-config');
 const router = express.Router();
-const bucket = admin.storage().bucket();
-const tempStorage = multer.memoryStorage();
-const upload = multer({ storage: tempStorage });
 const handlePostOrder = async(req,res) => {
     try {
-        const { displayName, date, orderId, service_type, start_time, end_time, paid_money} = req.body;
-        await Order.doc().set({ displayName, date, orderId, service_type, start_time, end_time, paid_money });
+        const { displayName, date, order_id, service_type, start_time, end_time, paid_money} = req.body;
+        await Order.doc().set({ displayName, date, order_id, service_type, start_time, end_time, paid_money });
         return res.status(200).json({ message: "Order sent successfully", statusCode: 200 });
     } catch (error) {
       return res.status(500).send({message: error.message})
