@@ -15,6 +15,7 @@ app.use('/login', authRouter);
 app.use('/signup', authRouter);
 app.use('/profile', profileRouter);
 app.use('/trainers', trainerRouter);
+app.use('/manage-coaches', trainerRouter);
 app.use('/manage-orders', orderRouter);
 app.use('/manage-users', userRouter);
 
