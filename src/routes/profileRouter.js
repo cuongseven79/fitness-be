@@ -102,16 +102,27 @@ const handleGetProfile = async(req,res) => {
       return;
     }
         await User.doc(id).update(formData);
-        return res.status(200).json({ message: "User updated successfully", formData });
+        return res.status(200).json({ message: "User updated successfully", statusCode:200, formData });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "An error occurred" });
     }
+  }
+const handleUpdateTrainerStatus = async (req,res) => {
+  try {
+    const { id, trainerStatus } = req.body;
+    await User.doc(id).update({trainerStatus: trainerStatus});
+    return res.status(200).json({ message: "User updated successfully updated", statusCode:200, trainerStatus });
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send({message: "An error occurred error"})
+  }
 }
 
 router.get('/', handleGetProfile);
 router.post('/', upload.single('image'), handleUpload);
 router.put('/update', handleUpdateInfoUser);
+router.put('/switch', handleUpdateTrainerStatus);
 router.delete('/delete', handleDelete);
 
 module.exports = router;
