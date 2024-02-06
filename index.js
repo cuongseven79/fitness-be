@@ -9,6 +9,7 @@ const homeRouter = require("./src/routes/homeRouter");
 const orderRouter = require("./src/routes/orderRouter");
 const userRouter = require("./src/routes/userRouter");
 const trainerRouter = require("./src/routes/trainerRouter");
+const invoiceRouter = require("./src/routes/invoiceRouter");
 
 app.use('/', homeRouter);
 app.use('/login', authRouter);
@@ -17,6 +18,7 @@ app.use('/profile', profileRouter);
 app.use('/trainers', trainerRouter);
 app.use('/manage-orders', orderRouter);
 app.use('/manage-users', userRouter);
+app.use('/payment', invoiceRouter);
 
 
 app.listen(PORT, () => {
