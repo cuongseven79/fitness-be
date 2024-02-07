@@ -96,13 +96,12 @@ const handleGetProfile = async(req,res) => {
 }
   const handleUpdateInfoUser = async(req, res) => {
     const { formData, id } = req.body;
-    
     try {
       if (!id || !formData) {
-      return;
+      return res.status(400).send({ message: "No userid (or) formData provided." });
     }
-        await User.doc(id).update(formData);
-        return res.status(200).json({ message: "User updated successfully", statusCode:200, formData });
+      await User.doc(id).update(formData);
+        return res.status(200).json({ message: "User updated successfully", statusCode:200});
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "An error occurred" });
