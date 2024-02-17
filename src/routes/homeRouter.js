@@ -5,7 +5,7 @@ const { User, Feedback } = require('../config/firebase-config');
 /* GET */
 const handleGetTrainersPopular = async (req, res) => {
     try {
-        const fields = ['taekwondo', 'yoga', 'boxing','pilates','aerobic','gym']
+        const fields = ['taekwondo', 'yoga', 'boxing','aerobics','basketball','gym']
         const snapshot = await User.where('role', '==', 'pt')
                            .where('rating', '>=', '4')
                            .where('field', 'in', fields )
