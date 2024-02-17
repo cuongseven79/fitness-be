@@ -54,16 +54,21 @@ const handleCreatedPayment = async (req, res) => {
 const handleGetPaymentResult = async (req, res) => {
     const dateString = req.query.vnp_PayDate;
     const payDate = dayjs(dateString).format('YYYY-MM-DD HH:mm:ss');
-    const orderItem = {
-        paidDate: payDate,
-        userId: req.query.userId,
-        orderId: req.query.vnp_TxnRef,
-        paidMoney: req.query.vnp_Amount,
-        serviceType: req.query.vnp_OrderInfo,
-        startTime: payDate,
-    };
+    const vndPayMoney = req.query.vnp_Amount / 100;
+    const userName = req.query.userName;
     const userId = req.query.userId;
     delete req.query.userId;
+    delete req.query.userName;
+    const orderItem = {
+        create_at: payDate,
+        date: payDate,
+        user_id: userId,
+        order_id: req.query.vnp_TxnRef,
+        paid_money: vndPayMoney,
+        service_type: req.query.vnp_OrderInfo,
+        start_time: payDate,
+        displayName: userName,
+    };
     var vnp_Params = req.query;
     var secureHash = vnp_Params['vnp_SecureHash'];
 
@@ -113,23 +118,34 @@ async function updatedRole(userId) {
 }
 
 async function checkDuplicateOrderId(Orders, orderItem, rspCode, res) {
-    const snapshot = await Orders.where('orderId', '==', orderItem.orderId).get();
+    const snapshot = await Orders.where('order_id', '==', orderItem.order_id).get();
+    const userDoc = User.doc(orderItem.user_id);
+    const userSnap = await userDoc.get();
 
-    if (snapshot.empty) {
-        const newOrders = Orders.doc();
-        await newOrders.set(orderItem);
+    if (userSnap.exists && userSnap.data().coachesId) {
         res.status(200).json({
-            RspCode: rspCode,
-            Message: 'Success',
+            RspCode: '97',
+            Message: 'You are booking PT.',
         });
-    } else if (snapshot) {
-        // orderId is existed
-        res.status(200).json({
-            RspCode: '99',
-            Message: 'orderId is duplicated',
-        });
-    } else {
-        res.status(200).json({ RspCode: rspCode, Message: 'Failed' });
+    }
+    else {
+        if (snapshot.empty) {
+            const newOrders = Orders.doc();
+            await newOrders.set(orderItem);
+            res.status(200).json({
+                RspCode: rspCode,
+                Message: 'Success.',
+            });
+        } else if (snapshot) {
+            // orderId is existed
+            res.status(200).json({
+                RspCode: '99',
+                Message: 'orderId is duplicated.',
+            });
+        }
+        else {
+            res.status(200).json({ RspCode: rspCode, Message: 'Failed.' });
+        }
     }
 }
 
