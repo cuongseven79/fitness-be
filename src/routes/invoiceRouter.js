@@ -52,21 +52,19 @@ const handleCreatedPayment = async (req, res) => {
 };
 
 const handleGetPaymentResult = async (req, res) => {
-    const dateString = req.query.vnp_PayDate;
-    const payDate = dayjs(dateString).format('YYYY-MM-DD HH:mm:ss');
-    const vndPayMoney = req.query.vnp_Amount / 100;
-    const userName = req.query.userName;
-    const userId = req.query.userId;
+    const { vnp_OrderInfo, vnp_TxnRef, vnp_PayDate, vnp_Amount, userId, userName } = req.query;
+    const payDate = dayjs(vnp_PayDate).format("DD-MM-YYYY HH:mm:ss");
+    const coachExpired = setTimePackage(vnp_OrderInfo);
     delete req.query.userId;
     delete req.query.userName;
     const orderItem = {
         create_at: payDate,
         date: payDate,
         user_id: userId,
-        order_id: req.query.vnp_TxnRef,
-        paid_money: vndPayMoney,
-        service_type: req.query.vnp_OrderInfo,
-        start_time: payDate,
+        order_id: vnp_TxnRef,
+        paid_money: parseInt(vnp_Amount) / 100,
+        service_type: vnp_OrderInfo,
+        coach_expired: coachExpired,
         displayName: userName,
     };
     var vnp_Params = req.query;
@@ -147,6 +145,24 @@ async function checkDuplicateOrderId(Orders, orderItem, rspCode, res) {
             res.status(200).json({ RspCode: rspCode, Message: 'Failed.' });
         }
     }
+}
+
+function setTimePackage(orderInfo) {
+    let coachExpired;
+    switch (orderInfo) {
+        case "Silver Package":
+            coachExpired = 180;
+            break;
+        case "Gold Package":
+            coachExpired = 270;
+            break;
+        case "Platinum Package":
+            coachExpired = 365;
+            break;
+        default:
+            throw new Error(`Invalid order info: ${orderInfo}`);
+    }
+    return coachExpired;
 }
 
 router.post('/create-payment-url', handleCreatedPayment);
