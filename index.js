@@ -12,6 +12,7 @@ const trainerRouter = require("./src/routes/trainerRouter");
 const coachRouter = require("./src/routes/coachRouter");
 const customerRouter = require("./src/routes/customerRouter");
 const invoiceRouter = require("./src/routes/invoiceRouter");
+const bookingRouter = require("./src/routes/bookingRouter");
 
 app.use('/', homeRouter);
 app.use('/login', authRouter);
@@ -23,6 +24,7 @@ app.use('/manage-customers', customerRouter);
 app.use('/manage-orders', orderRouter);
 app.use('/manage-users', userRouter);
 app.use('/payment', invoiceRouter);
+app.use('/booking', bookingRouter);
 
 
 app.listen(PORT, () => {
