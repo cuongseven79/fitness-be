@@ -53,7 +53,7 @@ const handleCreatedPayment = async (req, res) => {
 
 const handleGetPaymentResult = async (req, res) => {
     const { vnp_OrderInfo, vnp_TxnRef, vnp_PayDate, vnp_Amount, userId, userName } = req.query;
-    const payDate = dayjs(vnp_PayDate).format("DD-MM-YYYY HH:mm:ss");
+    const payDate = dayjs(vnp_PayDate).format("DD/MM/YYYY");
     const coachExpired = setTimePackage(vnp_OrderInfo);
     delete req.query.userId;
     delete req.query.userName;
